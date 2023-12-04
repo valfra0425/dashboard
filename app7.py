@@ -61,9 +61,14 @@ df_group["count"] = (df.groupby("authors")["quotes"].count().reset_index())["quo
 
 # gráfico
 fig = px.scatter(df_group, x="positividade", y="authors", color='positividade', hover_data=["count"],
-                 hover_name="authors", height=600)
+                 hover_name="authors", height=500)
 # tirando visibilidade do eixo y
 fig.update_layout(yaxis=dict(visible=False))
+# atualiza tamanho dos pontos
+fig.update_traces(marker=dict(size=10))
+
+# histograma
+fig2 = px.histogram(df, x="positividade", range_x=[-1, 1])
 
 # Cria uma instância do aplicativo Dash.
 app = Dash(__name__)
@@ -88,6 +93,16 @@ app.layout = html.Div(className="main_container", children=[
             dcc.Graph(
                 id="scatter",
                 figure=fig
+            )
+        ]
+    ),
+    html.Div(
+        children=[
+            html.H2(className="center", children="Histograma da positividade das frases"),
+            # exibindo o gráfico do dataframe
+            dcc.Graph(
+                id="histogram",
+                figure=fig2
             )
         ]
     )
