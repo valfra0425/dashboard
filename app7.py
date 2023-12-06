@@ -70,6 +70,13 @@ fig.update_traces(marker=dict(size=10))
 # histograma
 fig2 = px.histogram(df, x="positividade", range_x=[-1, 1])
 
+# gráfico 2 onde mostra os textos por positividade
+fig3 = px.scatter(df, x="positividade", y="quotes", color='positividade', hover_data=["authors"], height=500)
+# tirando visibilidade do eixo y
+fig3.update_layout(yaxis=dict(visible=False))
+# atualiza tamanho dos pontos
+fig3.update_traces(marker=dict(size=10))
+
 # Cria uma instância do aplicativo Dash.
 app = Dash(__name__)
 
@@ -81,14 +88,14 @@ app.layout = html.Div(className="main_container", children=[
     # gráfico feito acima
     html.Div(
         children=[
-            html.H2(className="center", children="Dataframe criado a partir dos resultados"),
+            html.H2(className="center", children="Dataframe criado a partir da raspagem de dados"),
             # Exibindo o Datatable do dataframe baixado
             dash_table.DataTable(data=df_group.to_dict('records'), page_size=10),
         ]
     ),
     html.Div(
         children=[
-            html.H2(className="center", children="Gráfico criado a partir dos resultados"),
+            html.H2(className="center", children="Gráfico da positividade de acordo com o author"),
             # exibindo o gráfico do dataframe
             dcc.Graph(
                 id="scatter",
@@ -98,14 +105,24 @@ app.layout = html.Div(className="main_container", children=[
     ),
     html.Div(
         children=[
-            html.H2(className="center", children="Histograma da positividade das frases"),
+            html.H2(className="center", children="histograma de positividade das frases"),
             # exibindo o gráfico do dataframe
             dcc.Graph(
                 id="histogram",
                 figure=fig2
             )
         ]
-    )
+    ),
+    html.Div(
+        children=[
+            html.H2(className="center", children="gráfico da positividade das frases"),
+            # exibindo o gráfico do dataframe
+            dcc.Graph(
+                id="scatter2",
+                figure=fig3
+            )
+        ]
+    ),
 ])
 
 if __name__ == '__main__':
